@@ -25,15 +25,23 @@ import tqdm
 if __name__ == '__main__':
     rospy.init_node('capture_node')
 
+    '''
     models = [\
        'biscuits',
        'soap',
-       'soap2']
-
+       'soap2',
+       'book',
+       'glue',
+       'sticky_notes',
+       'snacks',
+       'eraser']
+    '''
+    models = ['book']
+    
     # Disable gravity and delete the ground plane
     initial_setup()
     labeled_features = []
-    num_samples = 10
+    num_samples = 100
 
     for model_name in models:
         print('spawning model ' + model_name)

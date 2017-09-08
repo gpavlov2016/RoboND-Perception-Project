@@ -36,13 +36,19 @@ def plot_confusion_matrix(cm, classes,
     plt.xlabel('Predicted label')
 
 # Load training data from disk
-training_set = pickle.load(open('training_set.sav', 'rb'))
+training_set = pickle.load(open('training_set.backup', 'rb'))
+training_set2 = pickle.load(open('training_set.sav', 'rb'))
 
 # Format the features and labels for use with scikit learn
 feature_list = []
 label_list = []
 
 for item in training_set:
+    if np.isnan(item[0]).sum() < 1:
+        feature_list.append(item[0])
+        label_list.append(item[1])
+
+for item in training_set2:
     if np.isnan(item[0]).sum() < 1:
         feature_list.append(item[0])
         label_list.append(item[1])
