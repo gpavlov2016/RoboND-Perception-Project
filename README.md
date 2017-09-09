@@ -80,7 +80,7 @@ Object recognition in this project is based on a point cloud output of a RGBD ca
 ## Filtering and Isolation
 The scene contains a table and objects, therefore it is necessary to separate the table from the objects. This is done in a function `ransac()` using RANSAC plane fitting and filtering out the inliers (that belong to the table that we are not interested in).
 
-## Eucledian Clustering
+## Euclidian Clustering
 This step identifies groups of points which belong to the same object. In this case a spatial distance between points was used as a metric for segmentation. The step is performed in `segmentation()` function.
 
 ## Object Recognition
@@ -89,11 +89,12 @@ Object recognition is done using Support Vector Machine classifier (SVM) that wa
 ### Features 
 There are two types of features that are extracted from the cloud point of an object:
 * histograms of colors - each one of the HSV channels produces a 32-bin histogram of channel values ranging 0-256 
-* histogram of normals - for each one of the HSV channels normals to the object's surgace are calculated and produce a 32-bin histogram of channel values ranging 0-256
+* histogram of normals - for each one of the HSV channels normals to the object's surface are calculated and produce a 32-bin histogram of channel values ranging 0-256
+
 In both cases the histograms are normalized to sum to 1 and concatenated to create a feature vector. The code responsible for this extraction is in `main.py` under the function `extract_features`. This function uses helper function in the file `features.py`.
 
 ### Model Training
-To train the model 100 samples of each class were collected as point cloud data from RGBD camera, after spawning a model of the object in random position in Gazebo. The classifier is SVM (Support Vector Machine) with linear kernel and it was trained on a traning set comprising on a random 80% of the data. The rest is test data on which the accuracy tests were performed. The accuracy on the test set was above 90%. The code responsible for training the clasiffier is located in `train_svm.py`.
+To train the model 100 samples of each class were collected as point cloud data from RGBD camera, after spawning a model of the object in random position in Gazebo. The classifier is SVM (Support Vector Machine) with linear kernel and it was trained on a training set comprising on a random 80% of the data. The rest is test data on which the accuracy tests were performed. The accuracy on the test set was above 90%. The code responsible for training the classifier is located in `train_svm.py`.
 ![confusion_normalized](confusion_normalized.png)
 ![confusion_matrix](confusion_matrix.png)
 
