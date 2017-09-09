@@ -5,13 +5,10 @@ import numpy as np
 import sklearn
 from sklearn.preprocessing import LabelEncoder
 import pickle
-#from sensor_stick.srv import GetNormals
-#from sensor_stick.features import compute_color_histograms
-#from sensor_stick.features import compute_normal_histograms
+from sensor_stick.srv import GetNormals
 from visualization_msgs.msg import Marker
 from pr2_robot.msg import DetectedObjectsArray
 from pr2_robot.msg import DetectedObject
-#pcfrom sensor_stick.pcl_helper import *
 
 import rospy
 import tf
@@ -30,7 +27,6 @@ import pcl
 
 from features import compute_color_histograms
 from features import compute_normal_histograms
-from sensor_stick.srv import GetNormals
 
 
 def downsample(cloud):
@@ -216,14 +212,12 @@ def object_recognition(cluster_indices, cloud_objects, white_cloud):
         label_pos[2] += .4
         object_markers_pub.publish(make_label(label,label_pos, index))
     
-        
         # Add the detected object to the list of detected objects.
         do = DetectedObject()
         do.label = label
         do.cloud = ros_cloud
         detected_objects.append(do)
     
-        
         #rospy.loginfo('Detected {} objects: {}'.format(len(detected_objects), detected_objects))
               
     return detected_objects
@@ -282,7 +276,8 @@ def pcl_callback(pcl_msg):
     segmented = segments_visuatlization(cluster_indices, white_cloud)
     
     # Convert PCL data to ROS messages and publish 
-    pcl_objects_pub.publish(pcl_to_ros(segmented))
+    pcl_objects_pub.publish(pcl_to_ros(objects))
+    pcl_segmented_pub.publish(pcl_to_ros(segmented))
     pcl_table_pub.publish(pcl_to_ros(table))
 
     # Classify the clusters
@@ -396,6 +391,8 @@ if __name__ == '__main__':
     #Create Publishers
     pcl_objects_pub = rospy.Publisher("/pcl_objects", pc2.PointCloud2, queue_size=1)
     pcl_table_pub = rospy.Publisher("/pcl_table", pc2.PointCloud2, queue_size=1)
+    pcl_segmented_pub = rospy.Publisher("/pcl_segmented", pc2.PointCloud2, queue_size=1)
+
     # create two publishers
     # Call them object_markers_pub and detected_objects_pub
     # Have them publish to "/object_markers" and "/detected_objects" with 
